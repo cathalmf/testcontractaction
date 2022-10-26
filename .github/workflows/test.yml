@@ -34,7 +34,7 @@ jobs:
       with:
         message: 'Added file containing ABI and Bytecode'
         add: 'test.json --force'
-        cwd: './artifacts/contracts/test/test.sol'
+        cwd: './artifacts/contracts/test.sol'
     
 
 
