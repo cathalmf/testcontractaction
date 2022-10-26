@@ -1,0 +1,40 @@
+name: QRC-Contract-Build-and-Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  contract-build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.event.pull_request.head.ref }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install @openzeppelin/contracts-upgradeable
+    - run: npm install hardhat
+    - run: npx hardhat compile
+    - uses: EndBug/add-and-commit@v9
+      with:
+        message: 'Added file containing ABI and Bytecode'
+        add: 'test.json --force'
+        cwd: './artifacts/contracts/test/test.sol'
+    
+
+
