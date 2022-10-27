@@ -38,6 +38,7 @@ jobs:
         
   second-stage:
 
+    needs: contract-build
     runs-on: ubuntu-latest
 
     strategy:
@@ -46,18 +47,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - run: npm install @nomicfoundation/hardhat-toolbox
     - run: npm install @openzeppelin/contracts-upgradeable
-    - run: npm install hardhat
-    - run: npx hardhat compile
-
     
-
-
+    - run: npx hardhat test 
+    - run: npx hardhat coverage
