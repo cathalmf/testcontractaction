@@ -6,5 +6,5 @@ contract test {
   function getData() external view returns(uint256) {
     return 1;
   }
-
+ 
 }
